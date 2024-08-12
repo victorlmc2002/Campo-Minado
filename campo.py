@@ -21,7 +21,7 @@ class Campo:
         Campo.todos.append(self)
 
     def cria_botao(self, posicao):
-        btn = Button(posicao,width= 8, height= 2)
+        btn = Button(posicao, text= "",width= 8, height= 2)
         btn.bind('<Button-1>', self.checar_campo)
         btn.bind('<Button-3>', self.marcar_campo)
         self.botao = btn
@@ -29,7 +29,8 @@ class Campo:
     @staticmethod    
     def cria_contadores(posicao):
         contador = Label(posicao, bg= "black", fg= "white",
-                          text= f"Falta {settings.QTD_CAMPOS} campos", font= ("", 30))
+                          text= f"Falta {settings.QTD_CAMPOS} campos",
+                          font= ("", 30))
         Campo.contador = contador
     
     def checar_campo(self, event=None):
@@ -56,7 +57,14 @@ class Campo:
             self.botao.configure(text=f"{self.qtd_minas_prox}")
             self.botao.configure(bg= "azure3")
             if(Campo.contador and Campo.qtd_minas):
-                Campo.contador.configure(text= f"Falta {Campo.qtd_campos} campos\n{Campo.qtd_minas} minas")
+                Campo.contador.configure(text= f"Falta {Campo.qtd_campos - Campo.qtd_minas} campos\n{Campo.qtd_minas} minas")
+            if Campo.qtd_campos - Campo.qtd_minas == 0:
+                self.vitoria()
+
+    def vitoria(self):
+        self.botao.configure(bg="green")
+        ctypes.windll.user32.MessageBoxW(0, 'Parabéns! Você venceu!', "Vitória", 0)
+        sys.exit()
 
     def obtem_campo_coordenadas(self, x, y):
         for campo in Campo.todos:
@@ -87,6 +95,24 @@ class Campo:
         self.botao.configure(bg= "red")
         ctypes.windll.user32.MessageBoxW(0, 'BOOM!', "GAME OVER", 0)
         sys.exit()
+
+    @staticmethod
+    def reiniciar_jogo(posicao):
+        Campo.criado = False
+        Campo.todos = []
+        Campo.qtd_minas = 0
+        Campo.qtd_campos = settings.QTD_CAMPOS
+
+        for widget in posicao.winfo_children():
+            widget.destroy()  # Remove todos os widgets antigos
+
+        for y in range(settings.TAMANHO_CAMPO):
+            for x in range(settings.TAMANHO_CAMPO):
+                c1 = Campo(x, y)
+                c1.cria_botao(posicao)
+                c1.botao.grid(column= x, row= y)
+        Campo.contador.configure(text= f"Falta {Campo.qtd_campos} campos")
+
 
     def marcar_campo(self, event):
         if self.botao.cget("bg") == "orange":

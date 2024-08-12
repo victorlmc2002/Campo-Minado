@@ -33,6 +33,10 @@ for y in range(settings.TAMANHO_CAMPO):
 
 Campo.cria_contadores(contador_frame)
 Campo.contador.place(x= 0, y= 0)
+botao_reiniciar = Button(contador_frame, text="Reiniciar", 
+                                 width= 12, height= 2)
+botao_reiniciar.bind('<Button-1>', lambda event: Campo.reiniciar_jogo(campo_frame))
+botao_reiniciar.place(x= 80, y= 200)
 
 #Roda a aba
 root.mainloop()
