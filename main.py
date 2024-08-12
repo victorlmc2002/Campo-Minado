@@ -23,7 +23,7 @@ contador_frame.place(x = 0, y = calculos.definir_altura(20))
 campo_frame = Frame(root, bg= "black",
                     width= calculos.definir_largura(75), 
                     height= calculos.definir_altura(75))
-campo_frame.place(x = calculos.definir_largura(25), y = calculos.definir_altura(20))
+campo_frame.place(x = calculos.definir_largura(33), y = calculos.definir_altura(35))
 
 for y in range(settings.TAMANHO_CAMPO):
     for x in range(settings.TAMANHO_CAMPO):
